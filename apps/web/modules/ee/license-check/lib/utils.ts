@@ -266,36 +266,32 @@ export const fetchLicense = reactCache(
 export const getRemoveBrandingPermission = async (
   billingPlan: Organization["billing"]["plan"]
 ): Promise<boolean> => {
-  if (E2E_TESTING) {
-    const previousResult = await fetchLicenseForE2ETesting();
-    return previousResult?.features?.removeBranding ?? false;
-  }
-
-  if (IS_FORMBRICKS_CLOUD && (await getEnterpriseLicense()).active) {
-    return billingPlan !== PROJECT_FEATURE_KEYS.FREE;
+  if (IS_FORMBRICKS_CLOUD) {
+    return billingPlan === PROJECT_FEATURE_KEYS.ENTERPRISE;
   } else {
-    const licenseFeatures = await getLicenseFeatures();
-    if (!licenseFeatures) return false;
-
-    return licenseFeatures.removeBranding;
+    // Self-hosted: Check license key
+    // const license = await getEnterpriseLicense();
+    // if (!license.active || !license.features?.removeBranding) {
+    //   return false;
+    // }
+    // return license.features?.removeBranding ?? false;
+    return true; // Always allow branding removal for self-hosted forks
   }
 };
 
 export const getWhiteLabelPermission = async (
   billingPlan: Organization["billing"]["plan"]
 ): Promise<boolean> => {
-  if (E2E_TESTING) {
-    const previousResult = await fetchLicenseForE2ETesting();
-    return previousResult?.features?.whitelabel ?? false;
-  }
-
-  if (IS_FORMBRICKS_CLOUD && (await getEnterpriseLicense()).active) {
-    return billingPlan !== PROJECT_FEATURE_KEYS.FREE;
+  if (IS_FORMBRICKS_CLOUD) {
+    return billingPlan === PROJECT_FEATURE_KEYS.ENTERPRISE;
   } else {
-    const licenseFeatures = await getLicenseFeatures();
-    if (!licenseFeatures) return false;
-
-    return licenseFeatures.whitelabel;
+    // Self-hosted: Check license key
+    // const license = await getEnterpriseLicense();
+    // if (!license.active || !license.features?.whitelabel) {
+    //   return false;
+    // }
+    // return license.features?.whitelabel ?? false;
+    return true; // Always allow white-labeling for self-hosted forks
   }
 };
 
